@@ -1,66 +1,3 @@
-
-
-/*package com.example.demo.events;
-
-import org.springframework.stereotype.Service;
-import java.util.List;
-
-@Service
-public class EventService {
-
-    private final EventRepository repo;
-
-    public EventService(EventRepository repo) {
-        this.repo = repo;
-    }
-
-    public List<Event> getAllEvents() {
-        return repo.findAll();
-    }
-}*/ 
-/*package com.example.demo.events;
-
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-
-@Service
-public class EventService {
-
-    private final EventRepository repo;
-
-    public EventService(EventRepository repo) {
-        this.repo = repo;
-    }
-
-    public List<Event> getAllEvents() {
-        return repo.findAll();
-    }
-
-    public Event createEvent(Event event) {
-
-        if (event.id == null || event.id.isBlank()) {
-            event.id = UUID.randomUUID().toString();
-        }
-
-        return repo.save(event);
-    }
-
-    public boolean deleteById(String id) {
-
-        if (!repo.existsById(id)) {
-            return false;
-        }
-
-        repo.deleteById(id);
-        return true;
-    }
-
-    public List<Event> searchByLocation(String location) {
-    return repo.findByLocationContainingIgnoreCase(location);
-}
-}*/
 package com.example.demo.events;
 
 import org.springframework.stereotype.Service;
@@ -92,7 +29,7 @@ public class EventService {
         return repo.save(event);
     }
 
-    public boolean deleteById(String id) {  //Checks if event exists, then deleted
+    public boolean deleteById(String id) {  //checks if event exists, then deleted
         if (!repo.existsById(id)) {
             return false;
         }
@@ -103,6 +40,10 @@ public class EventService {
         return repo.findById(id).orElse(null);
     }
 
+    public EventDetailDTO getDetailById(String id) {  //returns full event detail DTO, or null if not found
+        return repo.findById(id).map(EventDetailDTO::new).orElse(null);
+    }
+
     public Event updateEvent(String id, Event updated) {  //updates existing event fields
         if (!repo.existsById(id)) {
             return null;
@@ -111,12 +52,12 @@ public class EventService {
         return repo.save(updated);
     }
 
-    public List<EventDTO> getAllEventDTOs() {
+    public List<EventDTO> getAllEventDTOs() {   //get all events, convert into DTO, return new list
     return repo.findAll().stream()
             .map(EventDTO::new)
             .toList();
 }
-public List<EventDTO> searchEventDTOsByLocation(String location) {
+public List<EventDTO> searchEventDTOsByLocation(String location) {   //searches events by location, but returns trimmed DTO version for API
     return repo.findByLocationContainingIgnoreCase(location).stream()
             .map(EventDTO::new)
             .toList();

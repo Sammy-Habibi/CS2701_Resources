@@ -1,27 +1,7 @@
-/*package com.example.demo.events;
-
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/events")
-public class EventController {
-
-    private final EventService eventService;
-
-    public EventController(EventService eventService) {
-        this.eventService = eventService;
-    }
-
-    @GetMapping
-    public List<EventDTO> getEvents() {
-        return eventService.getAllEvents();
-    }
-}*/
 
 package com.example.demo.events;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -48,23 +28,23 @@ public List<EventDTO> searchByLocation(@RequestParam String location) {
     return eventService.searchEventDTOsByLocation(location);
 }
 
-    @PostMapping //Receives JSON event, creates new event
-    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+    @PostMapping //Recieves JSON event, creates new event
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) {
         Event created = eventService.createEvent(event);
         return ResponseEntity
                 .created(URI.create("/api/events/" + created.id))
                 .body(created);
     }
 
-    @GetMapping("/{id}") //Returns a single event by id
-    public ResponseEntity<Event> getEventById(@PathVariable String id) {
-        Event event = eventService.getById(id);
+    @GetMapping("/{id}") //Returns full event detail DTO for a single event detail page
+    public ResponseEntity<EventDetailDTO> getEventById(@PathVariable String id) {
+        EventDetailDTO event = eventService.getDetailById(id);
         if (event == null) { return ResponseEntity.notFound().build(); }
         return ResponseEntity.ok(event);
     }
 
     @PutMapping("/{id}") //Replaces event fields with request body
-    public ResponseEntity<Event> updateEvent(@PathVariable String id, @RequestBody Event event) {
+    public ResponseEntity<Event> updateEvent(@PathVariable String id, @Valid @RequestBody Event event) {
         Event updated = eventService.updateEvent(id, event);
         if (updated == null) { return ResponseEntity.notFound().build(); }
         return ResponseEntity.ok(updated);
