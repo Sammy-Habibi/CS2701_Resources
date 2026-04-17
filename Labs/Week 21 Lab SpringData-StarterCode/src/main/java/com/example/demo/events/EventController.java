@@ -56,6 +56,20 @@ public List<EventDTO> searchByLocation(@RequestParam String location) {
                 .body(created);
     }
 
+    @GetMapping("/{id}") //Returns a single event by id
+    public ResponseEntity<Event> getEventById(@PathVariable String id) {
+        Event event = eventService.getById(id);
+        if (event == null) { return ResponseEntity.notFound().build(); }
+        return ResponseEntity.ok(event);
+    }
+
+    @PutMapping("/{id}") //Replaces event fields with request body
+    public ResponseEntity<Event> updateEvent(@PathVariable String id, @RequestBody Event event) {
+        Event updated = eventService.updateEvent(id, event);
+        if (updated == null) { return ResponseEntity.notFound().build(); }
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}") //Deletes event by id
     public ResponseEntity<Void> deleteEvent(@PathVariable String id) {
         boolean deleted = eventService.deleteById(id);

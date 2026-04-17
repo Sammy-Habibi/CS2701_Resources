@@ -99,6 +99,18 @@ public class EventService {
         repo.deleteById(id);
         return true;
     }
+    public Event getById(String id) {  //returns a single event by id, or null if not found
+        return repo.findById(id).orElse(null);
+    }
+
+    public Event updateEvent(String id, Event updated) {  //updates existing event fields
+        if (!repo.existsById(id)) {
+            return null;
+        }
+        updated.id = id;
+        return repo.save(updated);
+    }
+
     public List<EventDTO> getAllEventDTOs() {
     return repo.findAll().stream()
             .map(EventDTO::new)

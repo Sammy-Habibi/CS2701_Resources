@@ -24,12 +24,12 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
-	
+
     @Column(nullable = false, updatable = false)
 	@CreatedDate
 	private Date Date;
-    
-    
+
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="buyer")
     private User buyer;
@@ -73,5 +73,5 @@ public class Order {
         this.buyer = buyer;
     }
 
-  
+
 }
